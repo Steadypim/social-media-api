@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8075
 
 spring:
   datasource:
@@ -10,7 +10,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
