@@ -2,6 +2,7 @@ package dev.steadypim.socialmediaapi.user;
 
 import dev.steadypim.socialmediaapi.friend.FriendRequest;
 import dev.steadypim.socialmediaapi.message.Message;
+import dev.steadypim.socialmediaapi.post.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +12,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
+/**
+ * Пользователь
+ * @field id - идентификатор пользователя в БД
+ * @field username - логин пользователя
+ * @field password - пароль пользователя
+ * @field role - роль пользователя
+ * @field sentFriendRequests - отправленные запросы на дружбу
+ * @field receivedFriendRequests - принятые запросы на дружбу
+ * @field friends - друзья пользователя
+ * @field subscribers - подписчики пользователя
+ * @field receivedMessages - поступившие сообщения
+ * @field subscriptions - отправленные сообщения
+ * @field posts - посты пользователя
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -57,6 +71,17 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "recipient")
     private List<Message> receivedMessages;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_subscription",
+            joinColumns = @JoinColumn(name = "subscriber_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> subscriptions = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

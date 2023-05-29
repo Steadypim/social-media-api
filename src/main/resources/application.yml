@@ -20,3 +20,8 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+steadypim:
+  openapi:
+    dev-url: http://localhost:8075
+    prod-url: https://steadypim-api.com

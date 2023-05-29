@@ -2,15 +2,16 @@ package dev.steadypim.socialmediaapi.post;
 
 import dev.steadypim.socialmediaapi.image.Image;
 import dev.steadypim.socialmediaapi.image.ImageService;
-import dev.steadypim.socialmediaapi.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Конвертер постов
+ */
 @Component
 @RequiredArgsConstructor
 public class PostMapper {

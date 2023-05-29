@@ -4,6 +4,13 @@ import dev.steadypim.socialmediaapi.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+/**
+ * Друзья
+ * @field id - идентификатор друга в БД
+ * @field sender - отправитель запроса на дружбу
+ * @field recipient - тот, кому отправили запрос
+ * @field status - статус запроса
+ */
 @Entity
 @Table(name = "friend_request")
 @Data

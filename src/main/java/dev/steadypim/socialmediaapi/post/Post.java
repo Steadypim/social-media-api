@@ -2,14 +2,25 @@ package dev.steadypim.socialmediaapi.post;
 
 import dev.steadypim.socialmediaapi.image.Image;
 import dev.steadypim.socialmediaapi.user.User;
+import dev.steadypim.socialmediaapi.userActivity.UserActivity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Посты
+ * @field id - идентификатор поста в БД
+ * @field title - заголовок поста
+ * @field text - текст поста
+ * @field images - изображения, прикрепленные к посту
+ * @field userActivities - активности в ленте
+ * @field user - пользователь, которому принадлежат посты
+ */
 @Entity
 @Table(name = "post")
 @Data
@@ -33,6 +44,9 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "image_id")
     )
     private List<Image> images;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserActivity> userActivities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

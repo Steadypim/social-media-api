@@ -30,6 +30,11 @@ public class UserService {
                 .build();
     }
 
+    public User getUserById(Integer id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invalid user id"));
+    }
+
     public User getCurrentUser(Authentication authentication) {
         String username = authentication.getName();
         return userRepository.findByUsername(username)
@@ -81,4 +86,24 @@ public class UserService {
         return messageRepository.findBySenderAndRecipientOrRecipientAndSenderOrderByTimestampAsc(user1, user2, user1, user2);
     }
 
+
+    public void subscribeUser(Integer subscriberId, Integer targetUserId) {
+        User subscriber = userRepository.findById(subscriberId)
+                .orElseThrow(() -> new RuntimeException("Invalid subscriber id"));
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new RuntimeException("Invalid target user id"));
+
+        subscriber.getSubscriptions().add(targetUser);
+        userRepository.save(subscriber);
+    }
+
+    public void unsubscribeUser(Integer subscriberId, Integer targetUserId) {
+        User subscriber = userRepository.findById(subscriberId)
+                .orElseThrow(() -> new RuntimeException("Invalid subscriber id"));
+        User targetUser = userRepository.findById(targetUserId)
+                .orElseThrow(() -> new RuntimeException("Invalid target user id"));
+
+        subscriber.getSubscriptions().remove(targetUser);
+        userRepository.save(subscriber);
+    }
 }

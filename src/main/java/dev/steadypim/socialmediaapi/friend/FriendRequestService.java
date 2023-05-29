@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Сервис добавления в друзья
+ */
 @Service
 @RequiredArgsConstructor
 public class FriendRequestService {
@@ -13,6 +16,10 @@ public class FriendRequestService {
     private final FriendRequestRepository friendRequestRepository;
     private final UserRepository userRepository;
 
+    /**
+     * Метод принимает запрос дружбы
+     * @param requestId идентификатор пользователя запрашивающего дружбу
+     */
     public void acceptFriendRequest(Integer requestId) {
         FriendRequest friendship = friendRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Friendship request not found"));
@@ -22,7 +29,10 @@ public class FriendRequestService {
             friendRequestRepository.save(friendship);
         }
     }
-
+    /**
+     * Метод отклоняет запрос дружбы
+     * @param requestId идентификатор пользователя запрашивающего дружбу
+     */
     public void declineFriendRequest(Integer requestId) {
         FriendRequest friendship = friendRequestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Friendship request not found"));
@@ -32,7 +42,11 @@ public class FriendRequestService {
             friendRequestRepository.save(friendship);
         }
     }
-
+    /**
+     * Метод отправляет запрос дружбы
+     * @param senderId идентификатор пользователя запрашивающего дружбу
+     * @param recipientId идентификатор пользователя, которому отправляется запрос
+     */
     public void sendFriendRequest(Integer senderId, Integer recipientId) {
         FriendRequest friendRequest = friendRequestRepository.findBySenderIdAndRecipientId(senderId, recipientId);
 
@@ -44,6 +58,13 @@ public class FriendRequestService {
         }
     }
 
+    /**
+     * Метод создает состояние "дружбы" между двумя пользователями
+     * @param senderId идентификатор пользователя запрашивающего дружбу
+     * @param recipientId идентификатор пользователя, которому отправляется запрос
+     * @param status статус состояния
+     * @return состояние "дружбы"
+     */
     private FriendRequest createFriendship(Integer senderId, Integer recipientId, Status status) {
         FriendRequest friendship = new FriendRequest();
         friendship.setId(senderId);
@@ -54,6 +75,10 @@ public class FriendRequestService {
     }
 
 
+    /**
+     * Метод удаляет друга
+     * @param userId идентификатор удаляемого друга
+     */
     public void removeFriend(Integer userId) {
         List<FriendRequest> friendships = friendRequestRepository.findBySender(userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Invalid user id")));
