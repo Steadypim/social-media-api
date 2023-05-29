@@ -1,5 +1,7 @@
 package dev.steadypim.socialmediaapi.user;
 
+import dev.steadypim.socialmediaapi.friend.FriendRequest;
+import dev.steadypim.socialmediaapi.message.Message;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +34,29 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "sender")
+    private List<FriendRequest> sentFriendRequests;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<FriendRequest> receivedFriendRequests;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<User> friends;
+
+    @ManyToMany(mappedBy = "friends")
+    private List<User> subscribers;
+
+    @OneToMany(mappedBy = "sender")
+    private List<Message> sentMessages;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<Message> receivedMessages;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

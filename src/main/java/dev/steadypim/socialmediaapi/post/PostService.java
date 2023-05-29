@@ -16,6 +16,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
+    private final PostMapper postMapper;
 
     public Post create(
             User user,
@@ -31,13 +32,34 @@ public class PostService {
                 .build());
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostDto> getAllPosts() throws IOException {
+        List<Post> posts = postRepository.findAll();
+
+        List<PostDto> postDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostDto postDto = postMapper.toDto(post);
+            postDtos.add(postDto);
+        }
+
+        return postDtos;
     }
 
-    public Post getPostById(Integer postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+    public List<PostDto> getAllUserPosts(Integer id) throws IOException {
+        List<Post> posts = postRepository.findByUserId(id)
+                .orElseThrow(() -> new RuntimeException("User does not have posts"));
+
+        List<PostDto> postDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostDto postDto = postMapper.toDto(post);
+            postDtos.add(postDto);
+        }
+
+        return postDtos;
+    }
+
+    public PostDto getPostById(Integer postId) throws IOException {
+        return postMapper.toDto(postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found")));
     }
 
     public Post updatePost(Integer postId, String title, String text, List<MultipartFile> imageFiles, User user) throws IOException {
@@ -61,7 +83,6 @@ public class PostService {
     }
 
     public void deletePost(Integer postId) {
-        Post post = getPostById(postId);
-        postRepository.delete(post);
+        postRepository.deleteById(postId);
     }
 }

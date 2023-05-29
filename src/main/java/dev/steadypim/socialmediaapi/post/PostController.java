@@ -33,14 +33,14 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        List<Post> posts = postService.getAllPosts();
+    public ResponseEntity<List<PostDto>> getAllPosts() throws IOException {
+        List<PostDto> posts = postService.getAllPosts();
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable("postId") Integer postId) {
-        Post post = postService.getPostById(postId);
+    public ResponseEntity<PostDto> getPostById(@PathVariable("postId") Integer postId) throws IOException {
+        PostDto post = postService.getPostById(postId);
         return ResponseEntity.ok(post);
     }
 
@@ -60,7 +60,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable("postId") Integer postId) {
+    public ResponseEntity<Void> deletePost(@PathVariable("postId") Integer postId){
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
